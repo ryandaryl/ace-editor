@@ -19,6 +19,14 @@
     <link href="https://raw.githubusercontent.com/ajaxorg/ace/master/doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
 </head>
 <script>
+
+xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        console.log(JSON.parse(xhr.responseText))
+    }
+}
+
 function toggleOptionsPanel() {
     borderPos = 280
     if (document.getElementById('editor-container').style.left == 0 + "px") {
@@ -39,7 +47,11 @@ function toggleOptionsPanel() {
 }
 
 function runCode() {
-    console.log(window.env.editor.getValue())
+    code = window.env.editor.getValue()
+    url = `${ window.location }run?code=${ encodeURIComponent(code) }`
+    xhr.open("GET", url)
+    xhr.send()
+    console.log(url)
 }
 </script>
 <body>

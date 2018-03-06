@@ -4,4 +4,11 @@
   "repository": "https://github.com/ajaxorg/ace",
   "logo": "https://raw.githubusercontent.com/ajaxorg/ace/master/doc/site/images/logo.png",
   "keywords": ["Ace", "Cloud 9", "Editor", "Python"]
+  "addons": [ "redistogo" ],
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
 }
