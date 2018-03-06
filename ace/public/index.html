@@ -18,7 +18,34 @@
 
     <link href="https://raw.githubusercontent.com/ajaxorg/ace/master/doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
 </head>
+<script>
+function toggleOptionsPanel() {
+    borderPos = 280
+    if (document.getElementById('editor-container').style.left == 0 + "px") {
+        document.getElementById('optionsPanel').parentNode.parentNode.style.left = "0px"
+        document.getElementById('editor-container').style.left = borderPos + "px"
+        document.getElementById('editor-container').style.width = window.innerWidth - borderPos + 'px'
+        document.getElementsByClassName('ace_editor')[0].style.width = window.innerWidth - borderPos + 'px'
+        document.getElementById('editor-container').style.top = "0px"
+        document.getElementById('toggleOptionsButton').innerHTML = 'hide'
+    } else {
+        document.getElementById('optionsPanel').parentNode.parentNode.style.left = "-" + borderPos + "px"
+        document.getElementById('editor-container').style.left = "0px"
+        document.getElementById('editor-container').style.top = "16px"
+        document.getElementById('editor-container').style.width = window.innerWidth + 'px'
+        document.getElementsByClassName('ace_editor')[0].style.width = window.innerWidth + 'px'
+        document.getElementById('toggleOptionsButton').innerHTML = 'show'
+    }
+}
+
+function runCode() {
+    console.log(window.env.editor.getValue())
+}
+</script>
 <body>
+<div id="toggleOptionsButton" style="z-index: 2; position: absolute; left: 2px; color: #eee;" onclick="toggleOptionsPanel();">hide</div>
+<div id="runButton" style="z-index: 2; position: absolute; left: 250px; color: #eee;" onclick="runCode();">run</div>
+<div>&nbsp</div>
 <div  style="position:absolute;height:100%;width:260px">
   <a href="https://c9.io" title="Cloud9 IDE | Your code anywhere, anytime">
     <img id="c9-logo" src="demo/kitchen-sink/logo.png" style="width: 172px;margin: -9px 30px -12px 51px;">
