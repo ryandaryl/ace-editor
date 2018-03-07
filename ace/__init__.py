@@ -3,6 +3,7 @@ from flask import Flask, send_from_directory, request, jsonify, Markup
 from whitenoise import WhiteNoise
 from rq import Queue
 from worker import conn
+import pymongo
 
 app = Flask(__name__)
 
@@ -28,9 +29,36 @@ def exec_code(code):
         output = 'You can return html by defining a "html_output" variable.'
     return output
 
+def mongo_connect():
+    url = 'mongodb://genincweather:INFO30005@weather-shard-00-00-hifln.mongodb.net:27017,weather-shard-00-01-hifln.mongodb.net:27017,weather-shard-00-02-hifln.mongodb.net:27017/<DATABASE>?ssl=true&replicaSet=weather-shard-0&authSource=admin'
+    client = pymongo.MongoClient(url)
+    return client.test_db
+
+def load_from_mongo():
+    db = mongo_connect()
+    post_list = []
+    for post in db.ace_col.find():
+        post_list.append(post)
+    return post_list[0]['code']
+
+def save_to_mongo(code):
+    db = mongo_connect()
+    db.ace_col.delete_many({})
+    db.ace_col.insert_one({'code': code})
+
 @app.route('/')
 def index():
     return send_from_directory(os.getcwd() + '/ace/public', 'index.html')
+
+@app.route("/save", methods=['GET', 'POST'])
+def save():
+    print(request.values)
+    save_to_mongo(request.values.get('code'))
+    return jsonify({'message': 'Saved {} characters to MongoDB Cloud.'.format(len(load_from_mongo()))})
+
+@app.route("/load")
+def load():
+    return jsonify({'code': load_from_mongo()})
 
 @app.route("/run", methods=['GET', 'POST'])
 def handle_code():

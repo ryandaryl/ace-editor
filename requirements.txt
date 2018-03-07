@@ -2,5 +2,6 @@ Flask
 gunicorn
 whitenoise
 rq
+pymongo
 tensorflow
 pandas

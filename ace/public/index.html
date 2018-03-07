@@ -23,8 +23,30 @@
 xhr = new XMLHttpRequest();
 xhr.onreadystatechange = function () {
     if (xhr.readyState == 4 && xhr.status == 200) {
-        console.log(JSON.parse(xhr.responseText))
+        response = JSON.parse(xhr.responseText)
+        if (response['code']) {
+            window.env.editor.setValue(response['code'])
+            console.log(`Restored ${ response['code'].length } characters of saved code.`)
+        } else if (response['message'].substr(0, 5) == 'Saved') {
+            console.log(response)
+        } else {
+            console.log(response)
+            save_code()
+        }
     }
+}
+
+window.onload = function() {
+    url = `${ window.location }load`
+    xhr.open("GET", url)
+    xhr.send()
+}
+
+function save_code() {
+    url = `${ window.location }save`
+    xhr.open("POST", url)
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(`code=${ encodeURIComponent(window.env.editor.getValue()) }`)
 }
 
 function toggleOptionsPanel() {
