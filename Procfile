@@ -1,2 +1,2 @@
-web: gunicorn ace:wnapp
+web: python ace
 worker: python worker.py

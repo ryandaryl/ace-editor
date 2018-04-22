@@ -27,7 +27,7 @@ xhr.onreadystatechange = function () {
         if (response['code']) {
             window.env.editor.setValue(response['code'])
             console.log(`Restored ${ response['code'].length } characters of saved code.`)
-        } else if (response['message'].substr(0, 5) == 'Saved') {
+        } else if (response['message'] && response['message'].substr(0, 5) == 'Saved') {
             console.log(response)
         } else {
             console.log(response)
@@ -45,8 +45,8 @@ window.onload = function() {
 function save_code() {
     url = `${ window.location }save`
     xhr.open("POST", url)
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send(`code=${ encodeURIComponent(window.env.editor.getValue()) }`)
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify({ code: window.env.editor.getValue() }))
 }
 
 function toggleOptionsPanel() {
@@ -71,10 +71,10 @@ function toggleOptionsPanel() {
 function runCode() {
     code = window.env.editor.getValue()
     url = `${ window.location }run`
-    param = `code=${ encodeURIComponent(code) }`
+    data = JSON.stringify({ code: code })
     xhr.open("POST", url)
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send(param)
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(data)
     console.log(url)
 }
 </script>
@@ -93,6 +93,10 @@ function runCode() {
   <a href="https://ace.c9.io">
     <img id="ace-logo" src="demo/kitchen-sink/ace-logo.png" style="width: 134px;margin: 46px 0px 4px 66px;">
   </a>
+
+  <div>
+  <input type="text" name="location">
+  </div>
 
   </div>
   </div>
